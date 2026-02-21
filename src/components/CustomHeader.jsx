@@ -1,13 +1,8 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { useContext } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { AuthContext } from '../context/AuthContext';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function CustomHeader({ navigation }) {
 

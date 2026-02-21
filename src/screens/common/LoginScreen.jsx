@@ -5,7 +5,9 @@ import {
   StyleSheet,
   ImageBackground,
   SafeAreaView,
-  StatusBar
+  StatusBar,
+  KeyboardAvoidingView,
+  Platform
 } from 'react-native';
 
 import Input from '../../components/Input';
@@ -18,19 +20,17 @@ export default function LoginScreen({ navigation }) {
 
   const [otp, setOtp] = useState('');
   const [generatedOtp, setGeneratedOtp] = useState('');
-  const [step, setStep] = useState(1); 
-  // 1 = login form
-  // 2 = otp verification
+  const [step, setStep] = useState(1);
 
   const handleGenerateOtp = () => {
-    const fakeOtp = '1234'; // Replace with real backend OTP later
+    const fakeOtp = '1234';
     setGeneratedOtp(fakeOtp);
     setStep(2);
   };
 
   const handleVerifyOtp = (role) => {
-    if (otp === generatedOtp) {
-      login({ role });
+    if (otp.trim() === generatedOtp) {
+      login({ role }); // this will switch navigator
     } else {
       alert('Invalid OTP');
     }
@@ -44,64 +44,72 @@ export default function LoginScreen({ navigation }) {
     >
       <StatusBar barStyle="dark-content" />
 
-      <SafeAreaView style={localStyles.container}>
-        <View style={localStyles.card}>
-          <Text style={localStyles.title}>Login</Text>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{ flex: 1 }}
+      >
+        <SafeAreaView style={localStyles.container}>
+          <View style={localStyles.card}>
+            <Text style={localStyles.title}>Login</Text>
 
-          {/* ================= STEP 1 ================= */}
-          {step === 1 && (
-            <>
-              <Input placeholder="Email" style={localStyles.input} />
-              <Input
-                placeholder="Password"
-                secureTextEntry
-                style={localStyles.input}
-              />
-
-              <View style={localStyles.buttonContainer}>
-                <AppButton
-                  title="Generate OTP"
-                  onPress={handleGenerateOtp}
+            {/* STEP 1 */}
+            {step === 1 && (
+              <>
+                <Input placeholder="Email" style={localStyles.input} />
+                <Input
+                  placeholder="Password"
+                  secureTextEntry
+                  style={localStyles.input}
                 />
 
-                <View style={{ height: 12 }} />
+                <View style={localStyles.buttonContainer}>
+                  <AppButton
+                    title="Generate OTP"
+                    onPress={handleGenerateOtp}
+                  />
 
-                <AppButton
-                  title="Sign Up Instead"
-                  onPress={() => navigation.navigate('Signup')}
+                  <View style={{ height: 12 }} />
+
+                  <AppButton
+                    title="Sign Up Instead"
+                    onPress={() => navigation.navigate('Signup')}
+                  />
+                </View>
+              </>
+            )}
+
+            {/* STEP 2 */}
+            {step === 2 && (
+              <>
+                <Input
+                  placeholder="Enter 4 digit OTP"
+                  keyboardType="numeric"
+                  maxLength={4}
+                  value={otp}
+                  onChangeText={setOtp}
+                  style={localStyles.input}
                 />
-              </View>
-            </>
-          )}
 
-          {/* ================= STEP 2 ================= */}
-          {step === 2 && (
-            <>
-              <Input
-                placeholder="Enter 4 digit OTP"
-                keyboardType="numeric"
-                value={otp}
-                onChangeText={setOtp}
-                style={localStyles.input}
-              />
+                <View style={localStyles.buttonContainer}>
+                  <AppButton
+                    title="Login as User"
+                    disabled={otp.length !== 4}
+                    onPress={() => handleVerifyOtp('user')}
+                  />
 
-              <View style={localStyles.buttonContainer}>
-                <AppButton
-                  title="Login as User"
-                  onPress={() => handleVerifyOtp('user')}
-                />
+                  <View style={{ height: 12 }} />
 
-                <View style={{ height: 12 }} />
-
-                <AppButton
-                  title="Login as Professional"
-                  onPress={() => handleVerifyOtp('pro')}
-                />
-              </View>
-            </>
-          )}
-        </View>
-      </SafeAreaView>
+                  <AppButton
+                    title="Login as Professional"
+                    disabled={otp.length !== 4}
+                    onPress={() => handleVerifyOtp('pro')}
+                  />
+                </View>
+              </>
+            )}
+          </View>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
     </ImageBackground>
   );
 }
@@ -109,8 +117,6 @@ export default function LoginScreen({ navigation }) {
 const localStyles = StyleSheet.create({
   background: {
     flex: 1,
-    width: '100%',
-    height: '100%',
   },
   container: {
     flex: 1,
@@ -119,29 +125,19 @@ const localStyles = StyleSheet.create({
   },
   card: {
     width: '85%',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: 'rgba(255,255,255,0.9)',
     padding: 25,
     borderRadius: 20,
     elevation: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4.65,
   },
   title: {
     alignSelf: 'center',
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#333',
     marginBottom: 25,
   },
   input: {
     marginVertical: 8,
-    padding: 15,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 10,
-    backgroundColor: '#fff',
   },
   buttonContainer: {
     marginTop: 15,
