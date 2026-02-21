@@ -4,6 +4,7 @@ import {
   DefaultTheme,
   DarkTheme,
 } from '@react-navigation/native';
+import {MainStack} from './src/navigation/MainStack';
 
 import { AuthProvider, AuthContext } from './src/context/AuthContext';
 import RootNavigator from './src/navigation/RootNavigator';

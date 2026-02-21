@@ -5,6 +5,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from '../screens/Login2';
 import SignupScreen from '../screens/Signup2';
 import HomeScreen from '../screens/user/HomeScreen';
+import MapScreen from '../screens/user/MapScreen';
+import ProfileScreen from '../screens/user/ProfileScreen';
 
 // Tabs
 import BottomTabs from './BottomTabs';
@@ -26,6 +28,13 @@ export default function AppNavigator() {
 
       {/* Optional */}
       <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Map" component={MapScreen} />
+      <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen
+  name="Professionals"
+  component={ProfessionalsScreen}
+/>
     </Stack.Navigator>
+    
   );
 }
