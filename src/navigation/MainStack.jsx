@@ -1,74 +1,27 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-  ScrollView
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import styles from '../../styles/globalStyles';
+import React from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-export default function Booking({ navigation, route }) {
+import BottomTabs from './BottomTabs';
+import ProfessionalsScreen from '../screens/user/ProfessionalsScreen';
+import ProfessionalDetailsScreen from '../screens/user/ProfessionalDetailsScreen';
+import Booking from '../screens/user/Booking';
+import Payment from '../screens/user/Payment';
+import Chat from '../screens/user/Chat';
 
-  const { professional } = route.params || {};
+const Stack = createNativeStackNavigator();
 
-  const [date, setDate] = useState('');
-  const [address, setAddress] = useState('');
-
-  const handleBooking = () => {
-    if (!date || !address) {
-      Alert.alert('Error', 'Please fill all fields');
-      return;
-    }
-
-    navigation.navigate('Payment', {
-      professional,
-      date,
-      address,
-    });
-  };
-
+export default function MainStack() {
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
 
-        <Text style={{ fontSize: 22, fontWeight: 'bold', marginBottom: 20 }}>
-          Book Service
-        </Text>
+      <Stack.Screen name="Tabs" component={BottomTabs} />
 
-        {professional && (
-          <Text style={{ marginBottom: 10 }}>
-            Booking for: {professional.name}
-          </Text>
-        )}
+      <Stack.Screen name="Professionals" component={ProfessionalsScreen} />
+      <Stack.Screen name="ProfessionalDetails" component={ProfessionalDetailsScreen} />
+      <Stack.Screen name="Booking" component={Booking} />
+      <Stack.Screen name="Payment" component={Payment} />
+      <Stack.Screen name="Chat" component={Chat} />
 
-        <TextInput
-          style={styles.input}
-          placeholder="Date (DD/MM/YYYY)"
-          value={date}
-          onChangeText={setDate}
-        />
-
-        <TextInput
-          style={styles.input}
-          placeholder="Full Address"
-          value={address}
-          onChangeText={setAddress}
-          multiline
-        />
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleBooking}
-        >
-          <Text style={styles.buttonText}>
-            Proceed to Payment
-          </Text>
-        </TouchableOpacity>
-
-      </ScrollView>
-    </SafeAreaView>
+    </Stack.Navigator>
   );
 }
